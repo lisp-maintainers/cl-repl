@@ -61,6 +61,16 @@ Github: https://github.com/digikar99/cl-repl")
   (:name :history-file
    :description "Specifies which history file to use. If unspecified, this is the .cl-repl file in $HOME directory."
    :long "history-file"
+   :arg-parser #'identity)
+  (:name :load
+   :description "Load a file"
+   :short #\l
+   :long "load"
+   :arg-parser #'identity)
+  (:name :eval
+   :description "Eval a form"
+   :short #\e
+   :long "eval"
    :arg-parser #'identity))
 
 (defun main-prep ()
@@ -89,10 +99,14 @@ Github: https://github.com/digikar99/cl-repl")
       (setf *site-init-path* nil))
     (setf *history-filename*
           (or (getf options :history-file)
-              (format nil "~a/.cl-repl" (uiop:getenv "HOME")))))
-  (when *site-init-path*
-    (site-init))
-  (setf *history* (load-history))
+              (format nil "~a/.cl-repl" (uiop:getenv "HOME"))))
+    (when *site-init-path*
+      (site-init))
+    (setf *history* (load-history))
+    (loop for (k v) on options by #'cddr
+          do (case k
+               (:eval (eval (read-from-string v)))
+               (:load (load v)))))
   (when *repl-flush-screen* (flush-screen))
   (with-cursor-hidden
     (when show-logo
