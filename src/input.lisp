@@ -47,8 +47,10 @@
 
 (defun read-input1 (&key (multiline-p nil))
   (finish-output)
-  (rl:readline :prompt (prompt :multiline-p multiline-p)
-               :add-history t))
+  (let ((input (rl:readline :prompt (prompt :multiline-p multiline-p)
+                            :add-history t)))
+    (add-history input)
+    input))
 
 (defun read-input ()
   (let ((input (read-input1)))

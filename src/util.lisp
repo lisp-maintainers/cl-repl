@@ -43,7 +43,3 @@
   (with-cursor-hidden
     (format t "~c[2J~@*~c[;H" #\esc)
     (finish-output)))
-
-
-
-

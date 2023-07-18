@@ -1,6 +1,7 @@
 (in-package :cl-repl)
 
-(defconstant +version+ '0.6.4)
+(defconstant +version+
+  (intern (asdf:component-version (asdf:find-system "cl-repl"))))
 
 (defvar *logo*
   "  ___  __          ____  ____  ____  __
@@ -54,7 +55,10 @@
   (:name :no-init
    :description "Skip to load init file."
    :short #\n
-   :long "no-init"))
+   :long "no-init")
+  (:name :history-file
+   :description "Specifies which history file to use. If unspecified, this is the .cl-repl file in $HOME directory."
+   :long "history-file"))
 
 (progn
   (enable-syntax)
@@ -76,17 +80,20 @@
       (format t "cl-repl v~a~&" +version+)
       (uiop:quit 0))
     (when-option (options :no-init)
-      (setf *site-init-path* nil)))
+      (setf *site-init-path* nil))
+    (setf *history-filename*
+          (or (getf options :history-file)
+              (format nil "~a/.cl-repl" (uiop:getenv "HOME")))))
   (site-init)
+  (setf *history* (load-history))
   (when *repl-flush-screen* (flush-screen))
   (with-cursor-hidden
     (when show-logo
-      (format t (color *logo-color* *logo*)))
+      (format t (color *logo-color* *logo* :prompt-chars nil)))
     (format t "~a~%~a~2%" *versions* *copy*))
   (in-package :cl-user)
   (unwind-protect
-    (conium:call-with-debugger-hook #'debugger #'repl)
+       (conium:call-with-debugger-hook #'debugger #'repl)
+    (save-history)
     (rl:deprep-terminal))
   (when *repl-flush-screen* (flush-screen)))
-
-

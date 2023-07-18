@@ -43,7 +43,9 @@
     (ppcre:do-matches (start end regex text)
       (loop :for n :from start :below end
             :unless (elt syntax-map n)
-            :do (setf (elt syntax-map n) (color color (elt text n))))))
+            :do (setf (elt syntax-map n)
+                      (color color (elt text n)
+                             :prompt-chars nil)))))
   syntax-map)
 
 (defun highlight-text (text)
@@ -55,17 +57,29 @@
                   :for colored :in syntax-map
                   :collect (or colored raw)))))
 
+(defun last-line (lines)
+  "Returns part of LINES after the last #\newline.
+The second return value is T if a newline was found."
+  (let ((nl-pos (position #\newline lines :from-end t)))
+    (if nl-pos
+        (values (subseq lines (1+ nl-pos)) t)
+        (values lines nil))))
+
 (defun redisplay-with-highlight ()
   (rl:redisplay)
-  (format t "~c[2K~c~a~a~c[~aD"
-          #\esc
-          #\return
-          rl:*display-prompt*
-          (highlight-text rl:*line-buffer*)
-          #\esc
-          (- rl:+end+ rl:*point*))
-  (when (= rl:+end+ rl:*point*)
-    (format t "~c[1C" #\esc))
+  (multiple-value-bind (last-line newlinep)
+      (last-line rl:*line-buffer*)
+    (unless newlinep
+      (format t "~c[2K~c~a~a~c[~aD"
+              #\esc
+              #\return
+              (strip-rl-prompt-chars rl:*display-prompt*)
+              (highlight-text last-line)
+              ;; last-line
+              #\esc
+              (- rl:+end+ rl:*point*))
+      (when (= rl:+end+ rl:*point*)
+        (format t "~c[1C" #\esc))))
   (finish-output))
 
 (defvar *syntax-enabled* nil)

@@ -1,24 +1,31 @@
 (in-package :cl-repl)
 
 (defvar *debugger-level* 0)
+(defvar *exiting-p* nil)
 
 (defun exit-with-prompt ()
   (finish-output)
   (when (zerop *debugger-level*)
-    (string-case
-      (rl:readline :prompt "Do you really want to exit ([y]/n)? ")
-      (nil (terpri))
-      ("")
-      ("y")
-      ("n" (return-from exit-with-prompt (setf *last-input* "nil")))
-      (otherwise (return-from exit-with-prompt (exit-with-prompt)))))
+    (let ((*exiting-p* t))
+      (string-case
+          (rl:readline :prompt "Do you really want to exit ([y]/n)? ")
+        (nil (terpri))
+        ("")
+        ("y")
+        ("n" (return-from exit-with-prompt (setf *last-input* "nil")))
+        (otherwise (return-from exit-with-prompt (exit-with-prompt))))))
   (throw *debugger-level* nil))
 
 (defvar *output-indicator-function*
   #'(lambda () "[OUT]: "))
 
 (defun print-result (values)
-  (format t "~&~a~{~s ~}~%" (color *output-indicator-color* (funcall *output-indicator-function*)) values)
+  (reset-input)
+  (format t "~&~a~{~s~^~%~}~%"
+          (color *output-indicator-color*
+                 (funcall *output-indicator-function*)
+                 :prompt-chars nil)
+          values)
   (finish-output) t) 
 
 (defun eval-print (-)
@@ -45,4 +52,3 @@
   (loop :when (string/= *keymap* "default")
               :do (set-keymap "default")
         :while (catch 0 (read-eval-print))))
- 

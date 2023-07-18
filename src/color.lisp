@@ -1,9 +1,31 @@
 (in-package cl-repl)
 
-(defun color (color string)
-  (if (null color)
-      string
-      (format nil "~c[38;5;~am~a~c[0m" #\ESC color string #\ESC)))
+(defun color (color string &key (prompt-chars t))
+  (cond ((null color)
+         string)
+        (prompt-chars
+         (format nil "~c~c[38;5;~am~c~a~c~c[0m~c"
+                 #\soh
+                 #\esc
+                 color
+                 #\stx
+                 string
+                 #\soh
+                 #\esc
+                 #\stx))
+        (t
+         (format nil "~c[38;5;~am~a~c[0m"
+                 #\esc
+                 color
+                 string
+                 #\esc))))
+
+(defun strip-rl-prompt-chars (string)
+  (with-output-to-string (s)
+    (loop :for i :below (length string)
+          :when (and (char/= #\soh (char string i))
+                     (char/= #\stx (char string i)))
+            :do (write-char (char string i) s))))
 
 (defparameter *default-prompt-color* 40)
 (defparameter *debugger-prompt-color* 9)
