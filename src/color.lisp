@@ -1,6 +1,13 @@
 (in-package cl-repl)
 
-(defun color (color string &key (prompt-chars t))
+(defvar *prompt-chars* t
+  "Used as the default value of :PROMPT-CHARS keyword argument to COLOR")
+
+(defun color (color string &key (prompt-chars *prompt-chars*))
+  "If PROMPT-CHARS is non-NIL, then surrounds the color ascii codes in prompt
+ignore characters as suggested by readline. The start character is the '\001'
+which SBCL prints as #\Soh, while the end character is '\002' which SBCL
+prints as #\Stx"
   (cond ((null color)
          string)
         (prompt-chars
