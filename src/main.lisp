@@ -60,12 +60,14 @@
    :description "Specifies which history file to use. If unspecified, this is the .cl-repl file in $HOME directory."
    :long "history-file"))
 
-(progn
+(defun main-prep ()
+  (bind-multiline-keys)
   (enable-syntax)
   (rl:register-function :complete #'completer)
   (install-inspector))
 
 (defun main (&optional argv &key (show-logo t))
+  (main-prep)
   (multiple-value-bind (options free-args)
       (handler-case
           (if argv (opts:get-opts argv) (opts:get-opts))

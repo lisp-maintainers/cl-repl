@@ -9,9 +9,9 @@
     `(let ((,keymap (rl:copy-keymap (or (find-keymap ,parent) *rl-default-keymap*))))
        (loop :for (key func) :in ',bindings
              :when (stringp key)
-             :do (rl:bind-keyseq key (eval func) :keymap ,keymap)
+               :do (rl:bind-keyseq key (eval func) :keymap ,keymap)
              :when (characterp key)
-             :do (rl:bind-key key (eval func) :keymap ,keymap))
+               :do (rl:bind-key key (eval func) :keymap ,keymap))
        (setf (gethash ,name *keymaps*) ,keymap))))
 
 (defun unbind-key (args key)
@@ -20,12 +20,14 @@
 (defun find-keymap (name)
   (gethash name *keymaps*))
 
+(defun %cls-magic (&rest args)
+  (declare (ignore args))
+  (invoke-magic "%cls"))
+
 (define-keymap "default" ()
   ("\\C-r" #'unbind-key)
   ("\\C-s" #'unbind-key)
-  ("\\C-l" (lambda (&rest args)
-             (declare (ignore args))
-             (invoke-magic "%cls"))))
+  ("\\C-l" #'%cls-magic))
 
 (defun set-keymap (name)
   (let ((keymap (find-keymap name)))

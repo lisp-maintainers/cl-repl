@@ -60,21 +60,22 @@ otherwise insert the newline."
         (setf rl:*point* (+ next-newline-pos column 1))
         (setf rl:*point* len))))
 
-(rl:bind-key #\return  #'may-be-insert-newline)
-(rl:bind-key #\newline #'may-be-insert-newline)
+(defun bind-multiline-keys ()
+  (rl:bind-key #\return  #'may-be-insert-newline)
+  (rl:bind-key #\newline #'may-be-insert-newline)
 
-(rl:bind-keyseq (format nil "~c[A" #\esc) #'previous-line) ; Up
-(rl:bind-keyseq (format nil "~c[B" #\esc) #'next-line) ; Down
-(rl:bind-keyseq (format nil "~c" #\dle) #'previous-line) ; C-p
-(rl:bind-keyseq (format nil "~c" #\so)  #'next-line) ; C-n
+  (rl:bind-keyseq (format nil "~c[A" #\esc) #'previous-line) ; Up
+  (rl:bind-keyseq (format nil "~c[B" #\esc) #'next-line) ; Down
+  (rl:bind-keyseq (format nil "~c" #\dle) #'previous-line) ; C-p
+  (rl:bind-keyseq (format nil "~c" #\so)  #'next-line) ; C-n
 
-(rl:bind-keyseq (format nil "~c[1;5A" #\esc) #'previous-input) ; Ctrl+Up
-(rl:bind-keyseq (format nil "~c[1;5B" #\esc) #'next-input) ; Ctrl+Down
-(rl:bind-keyseq (format nil "~cp" #\esc) #'previous-input) ; M-p
-(rl:bind-keyseq (format nil "~cn" #\esc) #'next-input) ; M-n
+  (rl:bind-keyseq (format nil "~c[1;5A" #\esc) #'previous-input) ; Ctrl+Up
+  (rl:bind-keyseq (format nil "~c[1;5B" #\esc) #'next-input) ; Ctrl+Down
+  (rl:bind-keyseq (format nil "~cp" #\esc) #'previous-input) ; M-p
+  (rl:bind-keyseq (format nil "~cn" #\esc) #'next-input) ; M-n
 
-(setf rl:*blink-matching-paren* t)
-(cffi:foreign-funcall "rl_bind_key"
-                      :char 41     ; )
-                      :pointer (cffi:foreign-symbol-pointer "rl_insert_close")
-                      :pointer *rl-default-keymap*)
+  (setf rl:*blink-matching-paren* t)
+  (cffi:foreign-funcall "rl_bind_key"
+                        :char 41     ; )
+                        :pointer (cffi:foreign-symbol-pointer "rl_insert_close")
+                        :pointer *rl-default-keymap*))
