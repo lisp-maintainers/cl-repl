@@ -1,0 +1,56 @@
+on:
+  push:
+    tag: '*'
+
+jobs:
+
+  test:
+    name: ${{ matrix.OS }}
+
+    strategy:
+      matrix:
+        OS: [linux]
+    runs-on: ubuntu-22.04
+
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - name: Update $PATH
+      run: |
+        echo $PATH
+        echo "PATH=$HOME/bin:$PATH" >> $GITHUB_ENV
+    - name: Check $PATH
+      run: echo $PATH
+
+    - name: Install SBCL
+      run: sudo apt install sbcl
+
+    - name: Install quicklisp
+      run: |
+        wget https://beta.quicklisp.org/quicklisp.lisp
+        sbcl --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --quit
+
+    - name: Download and install buildapp
+      run: |
+        cd $HOME/quicklisp/local-projects/
+        wget https://www.xach.com/lisp/buildapp.tgz
+        tar -zxvf buildapp.tgz
+        cd buildapp-*
+        make
+        mkdir -p $HOME/bin
+        cp ./buildapp $HOME/bin/
+
+    - name: Place cl-repl in quicklisp/local-projects
+      run: |
+        mkdir $HOME/quicklisp/local-projects/cl-repl
+        cp -R /home/runner/work/cl-repl/cl-repl/* $HOME/quicklisp/local-projects/cl-repl
+
+    - name: Dump lisp image
+      run: |
+        buildapp --load ~/quicklisp/setup.lisp --eval '(ql:quickload "cl-repl")' --entry 'CL-REPL:MAIN' --output cl-repl.${{matrix.OS}} --compress-core
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: cl-repl.${{matrix.OS}}
