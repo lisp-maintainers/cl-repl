@@ -34,22 +34,28 @@ This project aims to provide a beginner-friendly REPL for Common Lisp with rich 
 What this project tries to achieve are listed here.
 
 - [x] powerful multiline editing with gnu readline.
-- [x] saving and loading multiline history
+- [x] saving and loading multiline history.
 - [x] tab-completion of symbols.
 - [x] simple installation instruction.
 - [x] code editting with text editor.
 - [ ] useful debugger & inspector. (incomplete)
 - [x] syntax highlighting of input texts.
+- [x] paren-matching.
 - [ ] implementation independence. (only SBCL supported)
 
 # Screenshots
 
-![Syntax Highlighting](./image/syntax-highlight.png)
+<p align="center" width="640px">
+  <img src="./image/syntax-parenmatch.gif" alt="Syntax and Parenmatching" />
+</p>
 
-![Tab Completion](./image/completion.png)
+<p align="center" width="640px">
+  <img src="./image/completion.png" alt="Tab Completion" />
+</p>
 
-![Debugger](./image/debugger.png)
-
+<p align="center" width="640px">
+  <img src="./image/debugger.png" alt="Debugger" />
+</p>
 
 # Installation
 
