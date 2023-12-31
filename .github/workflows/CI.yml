@@ -1,6 +1,7 @@
 on:
   push:
-    tag: '*'
+    tag:
+      - 'v*'
 
 jobs:
 

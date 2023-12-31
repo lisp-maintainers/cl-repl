@@ -1,19 +1,40 @@
 # CL-REPL
-[![Build Status](https://travis-ci.org/koji-kojiro/cl-repl.svg?branch=master)](https://travis-ci.org/koji-kojiro/cl-repl)
-[![License](http://img.shields.io/badge/license-GPLv3-blue.svg?style=flat)](https://github.com/koji-kojiro/cl-repl/blob/master/LICENSE)
-[![GitHub tag](https://img.shields.io/github/tag/koji-kojiro/cl-repl.svg?style=flat)](https://github.com/koji-kojiro/cl-repl/releases)
-[![Quicklisp dist](http://quickdocs.org/badge/cl-repl.svg)](http://quickdocs.org/cl-repl/)
+
+[![License](http://img.shields.io/badge/license-GPLv3-blue.svg?style=flat)](https://github.com/digikar99/cl-repl/blob/master/LICENSE)
+[![GitHub tag](https://img.shields.io/github/tag/digikar99/cl-repl.svg?style=flat)](https://github.com/digikar99/cl-repl/releases)
 
 # **Warning; WIP**
 The software is still alpha quality.  
 The functionalities are incomplete and may cause unkown bugs.
+
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [Overview](#overview)
+- [Screenshots](#screenshots)
+- [Installation](#installation)
+    - [Method 1: Download the binary](#method-1-download-the-binary)
+    - [Method 2: Rosswell](#method-2-rosswell)
+        - [Note about installation via Roswell](#note-about-installation-via-roswell)
+- [Usage](#usage)
+    - [Configuration](#configuration)
+    - [Syntax highlighting](#syntax-highlighting)
+    - [execute shell](#execute-shell)
+    - [%edit magic](#edit-magic)
+- [Contributing](#contributing)
+- [Author](#author)
+- [License](#license)
+
+<!-- markdown-toc end -->
+
 
 # Overview
 This project aims to provide a beginner-friendly REPL for Common Lisp with rich functionalities, such as IPython for Python.
 
 What this project tries to achieve are listed here.
 
-- [x] powerful line editting with gnu readline.
+- [x] powerful multiline editing with gnu readline.
+- [x] saving and loading multiline history
 - [x] tab-completion of symbols.
 - [x] simple installation instruction.
 - [x] code editting with text editor.
@@ -21,14 +42,29 @@ What this project tries to achieve are listed here.
 - [x] syntax highlighting of input texts.
 - [ ] implementation independence. (only SBCL supported)
 
-Screenshots can be found [here](./image/).
+# Screenshots
+
+![Syntax Highlighting](./image/syntax-highlight.png)
+
+![Tab Completion](./image/completion.png)
+
+![Debugger](./image/debugger.png)
+
 
 # Installation
-We recommend to use roswell.  
+
+## Method 1: Download the binary
+
+Look up the latest release compatible with your OS under https://github.com/digikar99/cl-repl/releases.
+
+If your choice of OS is not listed, you can help make lisping easier for others by contributing a PR. Take a look at the [.github/workflows/CI.yml](.github/workflows/CI.yml) for an inspiration. If it's unix-based, it might be as simple as adding a name to matrix -> OS.
+
+## Method 2: Rosswell
+
 CL-REPL can be installed via roswell as follows.
 
 ```
-$ ros install koji-kojiro/cl-repl
+$ ros install digikar99/cl-repl
 ```
 
 Before installation, please ensure that gnu readline is installed.  
@@ -40,14 +76,15 @@ $ brew link --force readline
 
 Also, ensure that your terminal support 256 colors.
 
+### Note about installation via Roswell
 
-## Note about installation via Roswell
 If you installed roswell with normal configurations, cl-repl will be located in `~/.roswell/bin`.  
 To use cl-repl from the command line, please ensure the PATH variable includes `~/.roswell/bin`.
 
 # Usage
+
 ```
-$　cl-repl
+$ cl-repl
 ```
 
 or
@@ -102,10 +139,8 @@ Any suggestions are always welcomed.
 # Author
 [TANI Kojiro](https://github.com/koji-kojiro) (kojiro0531@gmail.com)
 
+# Maintainer
+[Shubhamkar Ayare](https://github.com/digikar99) (shubhamayare@yahoo.co.in)
+
 # License
 CL-REPL is distributed under [GPLv3](./LICENSE).
-
-
-
-
-
