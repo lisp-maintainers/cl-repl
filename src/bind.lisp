@@ -73,8 +73,7 @@ otherwise insert the newline."
 (rl:bind-keyseq (format nil "~cp" #\esc) #'previous-input) ; M-p
 (rl:bind-keyseq (format nil "~cn" #\esc) #'next-input) ; M-n
 
-(cffi:defcvar (*rl-blink-matching-paren* "rl_blink_matching_paren") :int)
-(setf *rl-blink-matching-paren* 1)
+(setf rl:*blink-matching-paren* t)
 (cffi:foreign-funcall "rl_bind_key"
                       :char 41     ; )
                       :pointer (cffi:foreign-symbol-pointer "rl_insert_close")
