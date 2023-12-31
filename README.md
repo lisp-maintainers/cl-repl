@@ -4,7 +4,7 @@
 [![GitHub tag](https://img.shields.io/github/tag/digikar99/cl-repl.svg?style=flat)](https://github.com/digikar99/cl-repl/releases)
 
 # **Warning; WIP**
-The software is still alpha quality.  
+The software is still alpha quality.
 The functionalities are incomplete and may cause unkown bugs.
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
@@ -46,15 +46,21 @@ What this project tries to achieve are listed here.
 # Screenshots
 
 <p align="center" width="640px">
-  <img src="./image/syntax-parenmatch.gif" alt="Syntax and Parenmatching" />
+  <img style="width:640px;"
+       src="./image/syntax-parenmatch.gif"
+       alt="Syntax and Parenmatching" />
 </p>
 
 <p align="center" width="640px">
-  <img src="./image/completion.png" alt="Tab Completion" />
+  <img style="width:640px;"
+       src="./image/completion.png"
+       alt="Tab Completion" />
 </p>
 
 <p align="center" width="640px">
-  <img src="./image/debugger.png" alt="Debugger" />
+  <img style="width:640px;"
+       src="./image/debugger.png"
+       alt="Debugger" />
 </p>
 
 # Installation
@@ -73,7 +79,7 @@ CL-REPL can be installed via roswell as follows.
 $ ros install digikar99/cl-repl
 ```
 
-Before installation, please ensure that gnu readline is installed.  
+Before installation, please ensure that gnu readline is installed.
 If you use OSX, you might need to execute following command.
 
 ```
@@ -106,7 +112,7 @@ CL-USER> %help
 ```
 
 ## Configuration
-You can customize CL-REPL by editting `~/.replrc`. You can change appearance, add your own commands, and do anything you want when startup.  
+You can customize CL-REPL by editting `~/.replrc`. You can change appearance, add your own commands, and do anything you want when startup.
 An example can be found [here](./replrc-example).
 
 ## Syntax highlighting
@@ -121,17 +127,17 @@ If you want to disable it, put the following in your `.replrc`.
 If the line starts with `!`, excute it as shell command, e.g. `!ls -a`.
 
 ## %edit magic
-Line editting in repl is sometimes painful. CL-REPL allows yot to edit code with your favorite text editor. 
+Line editting in repl is sometimes painful. CL-REPL allows yot to edit code with your favorite text editor.
 
 ```
 CL-REPL> %edit <filename>
 ```
 
-CL-REPL invokes a text editor specified by `$EDITOR`.  
-After editting code, save and close it. Then repl will start to evaluate it.  
-If `<filename>` is not supplied, a temporary file will be created and deleted after evaluation.  
+CL-REPL invokes a text editor specified by `$EDITOR`.
+After editting code, save and close it. Then repl will start to evaluate it.
+If `<filename>` is not supplied, a temporary file will be created and deleted after evaluation.
 
-We've be sure the following editors work properly.  
+We've be sure the following editors work properly.
 
 - vi & vim
 - GNU Emacs
@@ -139,7 +145,7 @@ We've be sure the following editors work properly.
 - Lem
 
 # Contributing
-Don't hesitate to open issues or to send PRs.  
+Don't hesitate to open issues or to send PRs.
 Any suggestions are always welcomed.
 
 # Author
