@@ -65,21 +65,46 @@ The second return value is T if a newline was found."
         (values (subseq lines (1+ nl-pos)) t)
         (values lines nil))))
 
+(defun last-char (string)
+  (let ((len (length string)))
+    (when (> len 0)
+      (char string (1- len)))))
+
 (defun redisplay-with-highlight ()
   (rl:redisplay)
-  (multiple-value-bind (last-line newlinep)
-      (last-line rl:*line-buffer*)
-    (unless newlinep
-      (format t "~c[2K~c~a~a~c[~aD"
-              #\esc
-              #\return
-              (strip-rl-prompt-chars rl:*display-prompt*)
-              (highlight-text last-line)
-              ;; last-line
-              #\esc
-              (- rl:+end+ rl:*point*))
-      (when (= rl:+end+ rl:*point*)
-        (format t "~c[1C" #\esc))))
+  (when (or (= 0 (length rl:*line-buffer*))
+            ;; RL:*BLINK-MATCHING-PAREN* being T messes up with
+            ;; previous lines when the cursor blinks on matching parens.
+            ;; So, don't redisplay in that case.
+            (char/= #\) (last-char rl:*line-buffer*)))
+    (multiple-value-bind (last-line newlinep)
+        (last-line (highlight-text rl:*line-buffer*))
+      ;; Reference: https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
+      ;; Below:
+      ;; escape 2K: delete the entire line
+      ;; escape #D: move cursor left # columns
+      ;; escape #C: move cursor right # columns
+      (cond (newlinep
+             (format t "~c[2K~c~a~c[~aD"
+                     #\esc
+                     #\return
+                     last-line
+                     #\esc
+                     (- rl:+end+ rl:*point*))
+             (when (and (< 0 (length last-line))
+                        (= rl:+end+ rl:*point*))
+               (format t "~c[1C" #\esc)))
+            (t
+             (format t "~c[2K~c~a~a~c[~aD"
+                     #\esc
+                     #\return
+                     (strip-rl-prompt-chars rl:*display-prompt*)
+                     last-line
+                     ;; last-line
+                     #\esc
+                     (- rl:+end+ rl:*point*))
+             (when (= rl:+end+ rl:*point*)
+               (format t "~c[1C" #\esc))))))
   (finish-output))
 
 (defvar *syntax-enabled* nil)

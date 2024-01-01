@@ -1,5 +1,5 @@
 (defsystem cl-repl
-  :version "0.6.5"
+  :version "0.6.6"
   :author "TANI Kojiro"
   :maintainer "Shubhamkar Ayare (digikar, shubhamayare@yahoo.co.in)"
   :license "GPLv3"
