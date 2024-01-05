@@ -13,6 +13,12 @@
 (defvar *debugger-prompt-function*
   #'(lambda () (format nil "[~a]~a> " *debugger-level* (current-package))))
 
+(defun prompt-string ()
+  (let* ((prompt-function (if (zerop *debugger-level*)
+                              *default-prompt-function*
+                              *debugger-prompt-function*)))
+    (funcall prompt-function)))
+
 (defun prompt (&key (multiline-p nil))
   (let* ((prompt-function (if (zerop *debugger-level*)
                               *default-prompt-function*
