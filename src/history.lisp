@@ -73,9 +73,8 @@
                            #\esc
                            (length (prompt-string)))))
   (rl:redisplay)
-  (finish-output)
+  (finish-output))
 
-  (setf *current-line-number* 0))
 
 (defun previous-input (count key)
   (declare (ignore key))
