@@ -41,7 +41,7 @@ What this project tries to achieve are listed here.
 - [ ] useful debugger & inspector. (incomplete)
 - [x] syntax highlighting of input texts.
 - [x] paren-matching.
-- [ ] implementation independence. (only SBCL supported)
+- [ ] implementation independence: builds on SBCL and CCL. Segfaults on ECL.
 
 # Screenshots
 

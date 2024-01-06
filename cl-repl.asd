@@ -5,7 +5,6 @@
   :license "GPLv3"
   :depends-on (#:uiop
                #:unix-opts
-               #:conium
                #:cl-ppcre
                #:cl-readline
                #:trivial-backtrace)
