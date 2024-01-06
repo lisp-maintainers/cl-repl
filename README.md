@@ -42,6 +42,7 @@ What this project tries to achieve are listed here.
 - [x] syntax highlighting of input texts.
 - [x] paren-matching.
 - [ ] implementation independence: builds on SBCL and CCL. Segfaults on ECL.
+- [ ] autoindentation
 
 # Screenshots
 

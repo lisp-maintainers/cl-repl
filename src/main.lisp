@@ -11,6 +11,8 @@
 ")
 
 (defvar *copy* "(C) 2017-2018 TANI Kojiro <kojiro0531@gmail.com>")
+(defvar *maintain* "Maintained by: Shubhamkar Ayare <shubhamayare@yahoo.co.in>
+Github: https://github.com/digikar99/cl-repl")
 
 (defvar *versions*
   (format nil "cl-repl ~a on ~?~a ~a"
@@ -95,7 +97,7 @@
   (with-cursor-hidden
     (when show-logo
       (format t (color *logo-color* *logo* :prompt-chars nil)))
-    (format t "~a~%~a~2%" *versions* *copy*))
+    (format t "~a~%~a~%~a~2%" *versions* *copy* *maintain*))
   (in-package :cl-user)
   (unwind-protect
        (let ((*debugger-hook* #'debugger))
