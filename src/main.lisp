@@ -71,7 +71,8 @@
   (multiple-value-bind (options free-args)
       (handler-case
           (if argv (opts:get-opts argv) (opts:get-opts))
-        (error ()
+        (error (e)
+          (trivial-backtrace:print-backtrace e)
           (format t "try `cl-repl --help`.~&")
           (uiop:quit 1)))
     (when-option (options :help)
@@ -86,7 +87,8 @@
     (setf *history-filename*
           (or (getf options :history-file)
               (format nil "~a/.cl-repl" (uiop:getenv "HOME")))))
-  (site-init)
+  (when *site-init-path*
+    (site-init))
   (setf *history* (load-history))
   (when *repl-flush-screen* (flush-screen))
   (with-cursor-hidden

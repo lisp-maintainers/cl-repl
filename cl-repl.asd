@@ -7,7 +7,8 @@
                #:unix-opts
                #:conium
                #:cl-ppcre
-               #:cl-readline)
+               #:cl-readline
+               #:trivial-backtrace)
   :serial t
   :components ((:module "src" :components ((:file "package")
                                            (:file "util")
