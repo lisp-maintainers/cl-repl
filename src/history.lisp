@@ -18,7 +18,9 @@
     (when (probe-file filename)
       (with-open-file (f filename)
         (loop :while (listen f)
-              :do (setf history (cons (read f) history)))))
+              :for entry := (read f nil)
+              :do (when entry
+                    (setf history (cons entry history))))))
     history))
 
 (defun save-history ()
@@ -63,18 +65,24 @@
                             #\esc
                             #\esc
                             line)))
-              (when (or nl-pos
-                        (zerop line-num))
+              (when nl-pos
                 (format t "~c[1E" #\esc)) ; move cursor down 1 line
-          :finally (format t "~c[~aF~c[~aC"
-                           ;; move cursor ~a lines up and ~a columns to the right
-                           #\esc
-                           (count #\newline new-text)
-                           #\esc
-                           (length (prompt-string)))))
+          :finally (let ((nl-count (count #\newline new-text)))
+                     (if (zerop nl-count)
+                         (format t "~c[0G~c[~aC"
+                                 ;; ~a columns to the right
+                                 #\esc
+                                 #\esc
+                                 (length (prompt-string)))
+                         (format t "~c[~aF~c[~aC"
+                                 ;; move cursor ~a lines up
+                                 ;; and ~a columns to the right
+                                 #\esc
+                                 (count #\newline new-text)
+                                 #\esc
+                                 (length (prompt-string)))))))
   (rl:redisplay)
   (finish-output))
-
 
 (defun previous-input (count key)
   (declare (ignore key))
@@ -85,6 +93,7 @@
       (incf *input-relative-index* count)
       (setf rl:*point* 0)
       (rl:replace-line new-text 0)
+      (rl:redisplay)
       (highlight-new-input old-text new-text)))
   0)
 
@@ -99,6 +108,7 @@
              (setf rl:*point* 0)
              (decf *input-relative-index* count)
              (rl:replace-line new-text 0)
+             (rl:redisplay)
              (highlight-new-input old-text new-text))))
         (t
          (setf *input-relative-index* 0)

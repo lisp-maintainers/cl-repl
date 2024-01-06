@@ -58,7 +58,8 @@
    :long "no-init")
   (:name :history-file
    :description "Specifies which history file to use. If unspecified, this is the .cl-repl file in $HOME directory."
-   :long "history-file"))
+   :long "history-file"
+   :arg-parser #'identity))
 
 (defun main-prep ()
   (bind-multiline-keys)
@@ -66,11 +67,11 @@
   (rl:register-function :complete #'completer)
   (install-inspector))
 
-(defun main (&optional argv &key (show-logo t))
+(defun main (&optional (argv nil argvp) &key (show-logo t))
   (main-prep)
   (multiple-value-bind (options free-args)
       (handler-case
-          (if argv (opts:get-opts argv) (opts:get-opts))
+          (if argvp (opts:get-opts argv) (opts:get-opts))
         (error (e)
           (trivial-backtrace:print-backtrace e)
           (format t "try `cl-repl --help`.~&")
