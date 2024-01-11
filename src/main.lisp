@@ -11,8 +11,8 @@
 ")
 
 (defvar *copy* "(C) 2017-2018 TANI Kojiro <kojiro0531@gmail.com>")
-(defvar *maintain* "Maintained by: Shubhamkar Ayare <shubhamayare@yahoo.co.in>
-Github: https://github.com/digikar99/cl-repl")
+(defvar *maintain* "Maintained by: Lisp Maintainers
+Github: https://github.com/lisp-maintainers/cl-repl")
 
 (defvar *versions*
   (format nil "cl-repl ~a on ~?~a ~a"

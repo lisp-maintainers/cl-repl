@@ -1,7 +1,7 @@
 (defsystem cl-repl
-  :version "0.6.6"
+  :version "0.6.7"
   :author "TANI Kojiro"
-  :maintainer "Shubhamkar Ayare (digikar, shubhamayare@yahoo.co.in)"
+  :maintainer "Lisp Maintainers (https://github.com/lisp-maintainers/cl-repl)"
   :license "GPLv3"
   :depends-on (#:uiop
                #:unix-opts

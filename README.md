@@ -1,7 +1,7 @@
 # CL-REPL
 
-[![License](http://img.shields.io/badge/license-GPLv3-blue.svg?style=flat)](https://github.com/digikar99/cl-repl/blob/master/LICENSE)
-[![GitHub tag](https://img.shields.io/github/tag/digikar99/cl-repl.svg?style=flat)](https://github.com/digikar99/cl-repl/releases)
+[![License](http://img.shields.io/badge/license-GPLv3-blue.svg?style=flat)](https://github.com/lisp-maintainers/cl-repl/blob/master/LICENSE)
+[![GitHub tag](https://img.shields.io/github/tag/lisp-maintainers/cl-repl.svg?style=flat)](https://github.com/lisp-maintainers/cl-repl/releases)
 
 # **Warning; WIP**
 The software is still alpha quality.
@@ -68,7 +68,7 @@ What this project tries to achieve are listed here.
 
 ## Method 1: Download the binary
 
-Look up the latest release compatible with your OS under https://github.com/digikar99/cl-repl/releases.
+Look up the latest release compatible with your OS under https://github.com/lisp-maintainers/cl-repl/releases.
 
 If your choice of OS is not listed, you can help make lisping easier for others by contributing a PR. Take a look at the [.github/workflows/CI.yml](.github/workflows/CI.yml) for an inspiration. If it's unix-based, it might be as simple as adding a name to matrix -> OS.
 
@@ -77,7 +77,7 @@ If your choice of OS is not listed, you can help make lisping easier for others 
 CL-REPL can be installed via roswell as follows.
 
 ```
-$ ros install digikar99/cl-repl
+$ ros install lisp-maintainers/cl-repl
 ```
 
 Before installation, please ensure that gnu readline is installed.
@@ -152,8 +152,8 @@ Any suggestions are always welcomed.
 # Author
 [TANI Kojiro](https://github.com/koji-kojiro) (kojiro0531@gmail.com)
 
-# Maintainer
-[Shubhamkar Ayare](https://github.com/digikar99) (shubhamayare@yahoo.co.in)
+# Maintainer(s)
+[Lisp Maintainers](https://github.com/lisp-maintainers)
 
 # License
 CL-REPL is distributed under [GPLv3](./LICENSE).
