@@ -51,15 +51,18 @@
   "Edit code with text editor specified by $EDITOR."
   (declare (ignore args))
   (let ((editor (uiop:getenv "EDITOR")))
-    (if (null filename)
-        (uiop:with-temporary-file
-            (:stream s :pathname p :type "lisp" :prefix "cl-repl-edit" :suffix "")
-          (setf filename (namestring p))
-          (message-from-magic "CL-REPL will make a temporary file named: ~a~%" filename)
-          (format s "#|-*- mode:lisp -*-|#~2%")
-          (close s)
-          (edit-file-and-read editor filename))
-        (edit-file-and-read editor filename))))
+    (cond ((null editor)
+           (message-from-magic "Please set the EDITOR environment variable and retry.~%You can also use~%  (setf (uiop:getenv \"EDITOR\") \"editor/name/or/path\")~%to set the variable without restarting the REPL."))
+          ((null filename)
+           (uiop:with-temporary-file
+               (:stream s :pathname p :type "lisp" :prefix "cl-repl-edit" :suffix "")
+             (setf filename (namestring p))
+             (message-from-magic "CL-REPL will make a temporary file named: ~a~%" filename)
+             (format s "#|-*- mode:lisp -*-|#~2%")
+             (close s)
+             (edit-file-and-read editor filename)))
+          (t
+           (edit-file-and-read editor filename)))))
 
 (define-magic cd (&optional (dest (uiop:getenv "HOME")) &rest args)
   "Change working directory."
