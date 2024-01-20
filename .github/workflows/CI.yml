@@ -35,7 +35,7 @@ jobs:
     - name: Download and install buildapp
       run: |
         cd $HOME/quicklisp/local-projects/
-        wget https://www.xach.com/lisp/buildapp.tgz
+        wget --no-check-certificate https://www.xach.com/lisp/buildapp.tgz
         tar -zxvf buildapp.tgz
         cd buildapp-*
         make
