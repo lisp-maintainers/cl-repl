@@ -4,6 +4,7 @@
 exec ros -Q -L sbcl-bin -- $0 "$@"
 |#
 (progn ;;init forms
+  #+sbcl (sb-ext:enable-debugger)
   (ros:ensure-asdf)
   (unless (find-package :cl-repl)
     (handler-bind ((asdf:bad-system-name #'muffle-warning))

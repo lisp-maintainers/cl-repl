@@ -1,5 +1,5 @@
 (defsystem cl-repl
-  :version "0.6.7"
+  :version "0.7.0"
   :author "TANI Kojiro"
   :maintainer "Lisp Maintainers (https://github.com/lisp-maintainers/cl-repl)"
   :license "GPLv3"
