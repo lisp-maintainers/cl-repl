@@ -7,6 +7,8 @@
            define-color-scheme
            color-scheme
            disable-syntax
+           disable-debugger
+           enable-debugger
            *pager-command*
            *pager-minimum-line-count*
            *pager-flush-screen*

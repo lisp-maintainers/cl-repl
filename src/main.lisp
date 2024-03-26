@@ -71,7 +71,11 @@ Github: https://github.com/lisp-maintainers/cl-repl")
    :description "Eval a form"
    :short #\e
    :long "eval"
-   :arg-parser #'identity))
+   :arg-parser #'identity)
+  (:name :disable-debugger
+   :description "Disable debugger: print error without dropping into the debugger"
+   :short #\d
+   :long "disable-debugger"))
 
 (defun main-prep ()
   (bind-multiline-keys)
@@ -81,42 +85,47 @@ Github: https://github.com/lisp-maintainers/cl-repl")
 
 (defun main (&optional (argv nil argvp) &key (show-logo t))
   (main-prep)
-  (multiple-value-bind (options free-args)
-      (handler-case
-          (if argvp (opts:get-opts argv) (opts:get-opts))
-        (error (e)
-          (trivial-backtrace:print-backtrace e)
-          (format t "try `cl-repl --help`.~&")
-          (uiop:quit 1)))
-    (declare (ignore free-args))
-    (when-option (options :help)
-      (opts:describe
-       :prefix "A full-featured Common Lisp REPL implementation.")
-      (uiop:quit 0))
-    (when-option (options :version)
-      (format t "cl-repl v~a~&" +version+)
-      (uiop:quit 0))
-    (when-option (options :no-init)
-      (setf *site-init-path* nil))
-    (setf *history-filename*
-          (or (getf options :history-file)
-              (format nil "~a/.cl-repl" (uiop:getenv "HOME"))))
-    (when *site-init-path*
-      (site-init))
-    (setf *history* (load-history))
-    (loop for (k v) on options by #'cddr
-          do (case k
-               (:eval (eval (read-from-string v)))
-               (:load (load v)))))
-  (when *repl-flush-screen* (flush-screen))
-  (with-cursor-hidden
-    (when show-logo
-      (format t (color *logo-color* *logo* :prompt-chars nil)))
-    (format t "~a~%~a~%~a~2%" *versions* *copy* *maintain*))
-  (in-package :cl-user)
-  (unwind-protect
-       (let ((*debugger-hook* #'debugger))
-         (repl))
-    (save-history)
-    (rl:deprep-terminal))
-  (when *repl-flush-screen* (flush-screen)))
+  (let ((*debugger-enabled-p* t))
+    (multiple-value-bind (options free-args)
+        (handler-case
+            (if argvp (opts:get-opts argv) (opts:get-opts))
+          (error (e)
+            (trivial-backtrace:print-backtrace e)
+            (format t "try `cl-repl --help`.~&")
+            (uiop:quit 1)))
+      (declare (ignore free-args))
+      (when-option (options :help)
+        (opts:describe
+         :prefix "A full-featured Common Lisp REPL implementation.")
+        (uiop:quit 0))
+      (when-option (options :disable-debugger)
+        (setq *debugger-enabled-p* nil))
+      (when-option (options :version)
+        (format t "cl-repl v~a~&" +version+)
+        (uiop:quit 0))
+      (when-option (options :no-init)
+        (setf *site-init-path* nil))
+      (setf *history-filename*
+            (or (getf options :history-file)
+                (format nil "~a/.cl-repl" (uiop:getenv "HOME"))))
+      (when *site-init-path*
+        (site-init))
+      (setf *history* (load-history))
+      (loop for (k v) on options by #'cddr
+            do (case k
+                 (:eval (eval (read-from-string v)))
+                 (:load (load v)))))
+    (when *repl-flush-screen* (flush-screen))
+    (with-cursor-hidden
+      (when show-logo
+        (format t (color *logo-color* *logo* :prompt-chars nil)))
+      (format t "~a~%~a~%~a~2%" *versions* *copy* *maintain*))
+    (in-package :cl-user)
+    (unwind-protect
+         (let ((*debugger-hook* (if *debugger-enabled-p*
+                                    #'debugger
+                                    #'display-error-without-debugging)))
+           (repl))
+      (save-history)
+      (rl:deprep-terminal))
+    (when *repl-flush-screen* (flush-screen))))

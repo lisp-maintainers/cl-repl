@@ -7,6 +7,22 @@
 (defvar *redisplay-debugger-banner*)
 (defparameter *debugger-flush-screen* nil)
 
+(defvar *debugger-enabled-p*)
+
+(defun enable-debugger ()
+  (setq *debugger-enabled-p* t
+        *debugger-hook* #'debugger))
+
+(defun display-error-without-debugging (condition hook)
+  (declare (ignore hook))
+  (print condition *error-output*)
+  (trivial-backtrace:print-backtrace-to-stream *error-output*)
+  (invoke-restart '*abort))
+
+(defun disable-debugger ()
+  (setq *debugger-enabled-p* nil
+        *debugger-hook* #'display-error-without-debugging))
+
 (defun condition-string (condition)
   #+sbcl
   (let ((sb-int:*print-condition-references* nil))
