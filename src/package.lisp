@@ -6,6 +6,7 @@
            message-from-magic
            define-color-scheme
            color-scheme
+           enable-syntax
            disable-syntax
            disable-debugger
            enable-debugger
