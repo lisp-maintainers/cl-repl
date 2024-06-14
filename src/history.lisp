@@ -40,50 +40,6 @@
 (defun reset-input ()
   (setf *input-relative-index* 0))
 
-(defun highlight-new-input (old-text new-text)
-  (declare (ignorable old-text))
-  ;; See REDISPLAY-WITH-HIGHLIGHT for an explanation of ansi sequences
-
-  (let* ((hl-text (highlight-text new-text)))
-    (loop :for line-num :from 0
-          :with nl-pos := -1
-          :with old-nl-pos := nil
-          :while nl-pos
-          :do (setq old-nl-pos (1+ nl-pos))
-              (setq nl-pos (position #\newline hl-text
-                                     :start (1+ nl-pos)))
-              (let ((line (subseq hl-text
-                                  old-nl-pos
-                                  nl-pos)))
-                (if (zerop line-num)
-                    (format t "~c[2K~c[0G~a~a"
-                            #\esc
-                            #\esc
-                            rl:*display-prompt*
-                            line)
-                    (format t "~c[2K~c[0G~a"
-                            #\esc
-                            #\esc
-                            line)))
-              (when nl-pos
-                (format t "~c[1E" #\esc)) ; move cursor down 1 line
-          :finally (let ((nl-count (count #\newline new-text)))
-                     (if (zerop nl-count)
-                         (format t "~c[0G~c[~aC"
-                                 ;; ~a columns to the right
-                                 #\esc
-                                 #\esc
-                                 (length (prompt-string)))
-                         (format t "~c[~aF~c[~aC"
-                                 ;; move cursor ~a lines up
-                                 ;; and ~a columns to the right
-                                 #\esc
-                                 (count #\newline new-text)
-                                 #\esc
-                                 (length (prompt-string)))))))
-  (rl:redisplay)
-  (finish-output))
-
 (defun previous-input (count key)
   (declare (ignore key))
   (let ((old-text rl:*line-buffer*)
@@ -91,10 +47,10 @@
                        *history*)))
     (when new-text
       (incf *input-relative-index* count)
-      (setf rl:*point* 0)
+      (setf rl:*point* (length (highlight-text rl:+prompt+)))
       (rl:replace-line new-text 0)
-      (rl:redisplay)
-      (highlight-new-input old-text new-text)))
+      (setf rl:*point* 0)
+      (rl:redisplay)))
   0)
 
 (defun next-input (count key)
@@ -108,8 +64,7 @@
              (setf rl:*point* 0)
              (decf *input-relative-index* count)
              (rl:replace-line new-text 0)
-             (rl:redisplay)
-             (highlight-new-input old-text new-text))))
+             (rl:redisplay))))
         (t
          (setf *input-relative-index* 0)
          (rl:replace-line "" 0)))

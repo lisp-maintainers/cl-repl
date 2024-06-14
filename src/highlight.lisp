@@ -57,60 +57,114 @@
                   :for colored :in syntax-map
                   :collect (or colored raw)))))
 
-(defun last-line (lines)
-  "Returns part of LINES after the last #\newline.
-The second return value is T if a newline was found."
-  (let ((nl-pos (position #\newline lines :from-end t)))
-    (if nl-pos
-        (values (subseq lines (1+ nl-pos)) t)
-        (values lines nil))))
+(defmacro with-cursor-information ((line-var col-var) &body body)
+  (let ((prompt (gensym "PROMPT"))
+        (lines  (gensym "LINES"))
+        (point  (gensym "POINT"))
+        (previous-newline-position
+          (gensym "PREVIOUS-NEWLINE-POSITION")))
+    `(let* ((,prompt (prompt-string))
+            (,lines (concatenate 'string ,prompt rl:*line-buffer*))
+            (,point (+ (length ,prompt) rl:*point*))
+            (,line-var (count #\newline ,lines :end ,point))
+            (,col-var
+              (let ((,previous-newline-position
+                      (or (position #\newline ,lines
+                                    :end ,point
+                                    :from-end t)
+                          0)))
+                (- ,point ,previous-newline-position
+                   (if (zerop ,line-var)
+                       0
+                       ;; discard the newline
+                       1)))))
+       (declare (ignorable ,line-var ,col-var))
+       ,@body)))
 
-(defun last-char (string)
-  (let ((len (length string)))
-    (when (> len 0)
-      (char string (1- len)))))
+(defun move-cursor-from-point-to-prompt-start ()
+  (with-cursor-information (line-number col-number)
+    (unless (zerop line-number)
+      (format t "~c[~aF"
+              ;; move cursor ~a lines up, to the beginning of line
+              #\esc
+              line-number))))
+
+(defun move-cursor-from-prompt-start-to-point ()
+  (with-cursor-information (line-number col-number)
+    (unless (zerop line-number)
+      (format t "~c[~aE"
+              ;; move cursor ~a lines down, to the beginning of line
+              #\esc
+              line-number))
+    (unless (zerop col-number)
+      (format t "~c[0G~c[~aC"
+              ;; ~a columns to the right
+              #\esc
+              #\esc
+              col-number))))
 
 (defun redisplay-with-highlight ()
+  ;; This function is called when the cursor is moved, or any text is updated.
   (rl:redisplay)
-  (when (or (= 0 (length rl:*line-buffer*))
-            ;; RL:*BLINK-MATCHING-PAREN* being T messes up with
-            ;; previous lines when the cursor blinks on matching parens.
-            ;; So, don't redisplay in that case.
-            (char/= #\) (last-char rl:*line-buffer*)))
-    (multiple-value-bind (last-line newlinep)
-        (last-line (highlight-text rl:*line-buffer*))
-      ;; Reference: https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
-      ;; Below:
-      ;; escape 2K: delete the entire line
-      ;; escape #D: move cursor left # columns
-      ;; escape #C: move cursor right # columns
-      (cond (newlinep
-             (format t "~c[2K~c~a~c[~aD"
-                     #\esc
-                     #\return
-                     last-line
-                     #\esc
-                     (- rl:+end+ rl:*point*))
-             (when (and (< 0 (length last-line))
-                        (= rl:+end+ rl:*point*))
-               (format t "~c[1C" #\esc)))
-            (t
-             (format t "~c[2K~c~a~a~c[~aD"
-                     #\esc
-                     #\return
-                     (strip-rl-prompt-chars rl:*display-prompt*)
-                     last-line
-                     ;; last-line
-                     #\esc
-                     (- rl:+end+ rl:*point*))
-             (when (= rl:+end+ rl:*point*)
-               (format t "~c[1C" #\esc))))))
+  (let* ((original-point rl:*point*)
+         (lines rl:*line-buffer*)
+         (hl-lines (highlight-text lines)))
+
+    (when (or *exiting-p* (zerop (length lines)))
+      (return-from redisplay-with-highlight))
+
+    (loop :initially (move-cursor-from-point-to-prompt-start)
+          :for line-num :from 0
+          :with nl-pos := -1
+          :with old-nl-pos := nil
+          :while nl-pos
+          :do (setq old-nl-pos (1+ nl-pos))
+              (setq nl-pos (position #\newline hl-lines
+                                     :start (1+ nl-pos)))
+              (let ((line (subseq hl-lines
+                                  old-nl-pos
+                                  nl-pos)))
+                ;; Delete the existing line, then write the highlighted line
+                ;; Reference: https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797
+                ;; Below:
+                ;; escape 2K: delete the entire line
+                ;; escape #D: move cursor left # columns
+                ;; escape #C: move cursor right # columns
+                (if (zerop line-num)
+                    (format t "~c[2K~c[0G~a~a"
+                            #\esc
+                            #\esc
+                            rl:*display-prompt*
+                            line)
+                    (format t "~c[2K~c[0G~a"
+                            #\esc
+                            #\esc
+                            line)))
+              (when nl-pos
+                (format t "~c[1E" #\esc)) ; move cursor down 1 line
+          :finally (let ((nl-count (count #\newline lines)))
+                     (if (zerop nl-count)
+                         (format t "~c[0G~c[~aC"
+                                 ;; ~a columns to the right
+                                 #\esc
+                                 #\esc
+                                 (length (prompt-string)))
+                         (format t "~c[~aF~c[~aC"
+                                 ;; move cursor ~a lines up
+                                 ;; and ~a columns to the right
+                                 #\esc
+                                 nl-count
+                                 #\esc
+                                 (length (prompt-string)))))
+                   (move-cursor-from-prompt-start-to-point)
+                   (rl:redisplay)))
   (finish-output))
 
 (defvar *syntax-enabled* nil)
 
 (defun enable-syntax ()
   (setf *syntax-enabled* t)
+  ;; REDISPLAY function is also called when the cursor is moved.
   (rl:register-function :redisplay #'redisplay-with-highlight))
 
 (defun disable-syntax ()
