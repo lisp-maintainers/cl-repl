@@ -90,7 +90,10 @@ Github: https://github.com/lisp-maintainers/cl-repl")
         (handler-case
             (if argvp (opts:get-opts argv) (opts:get-opts))
           (error (e)
-            (trivial-backtrace:print-backtrace e)
+            (format uiop:*stderr* "~a: ~a"
+                    (class-name (class-of e))
+                    e)
+            (uiop:print-backtrace :stream uiop:*stderr* :condition e)
             (format t "try `cl-repl --help`.~&")
             (uiop:quit 1)))
       (declare (ignore free-args))

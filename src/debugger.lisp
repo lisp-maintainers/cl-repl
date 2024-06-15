@@ -15,8 +15,10 @@
 
 (defun display-error-without-debugging (condition hook)
   (declare (ignore hook))
-  (print condition *error-output*)
-  (trivial-backtrace:print-backtrace-to-stream *error-output*)
+  (format uiop:*stderr* "~a: ~a"
+          (class-name (class-of condition))
+          condition)
+  (uiop:print-backtrace :stream uiop:*stderr* :condition condition)
   (invoke-restart '*abort))
 
 (defun disable-debugger ()

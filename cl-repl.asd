@@ -9,8 +9,7 @@
   :depends-on (#:uiop
                #:unix-opts
                #:cl-ppcre
-               #:cl-readline
-               #:trivial-backtrace)
+               #:cl-readline)
   :serial t
   :components ((:module "src" :components ((:file "package")
                                            (:file "util")
