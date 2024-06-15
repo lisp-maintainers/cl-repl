@@ -17,6 +17,11 @@ jobs:
 
     - uses: actions/checkout@v3
 
+    - name: Initial directory
+      run: |
+        pwd
+        ls
+
     - name: Update $PATH
       run: |
         echo $PATH
@@ -39,12 +44,16 @@ jobs:
 
     - name: Dump lisp image
       run: |
-        sbcl --eval '(ql:quickload "cl-repl")' --eval '(asdf:make "cl-repl")'
+        sbcl --load ~/quicklisp/setup.lisp --eval '(ql:quickload "cl-repl")' --eval '(asdf:make "cl-repl")'
 
     - name: Rename lisp image
       run: |
         cd ~/quicklisp/local-projects/cl-repl/
-        mv cl-repl ~/cl-repl.${{matrix.OS}}
+        pwd
+        ls
+        mv cl-repl ~/work/cl-repl/cl-repl/cl-repl.${{matrix.OS}}
+        cd ~/
+        ls
 
     - name: Release
       uses: softprops/action-gh-release@v1
