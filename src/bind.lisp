@@ -4,7 +4,8 @@
   ;; The C library readline calling convention requires these two args
   "If the previous character is a newline, then accept-line by rl_newline
 otherwise insert the newline."
-  (if (or (= rl:*point* (length rl:*line-buffer*))
+  (if (or (and (= rl:*point* (length rl:*line-buffer*))
+               (not (line-continue-p rl:*line-buffer*)))
           *exiting-p*)
       (cffi:foreign-funcall "rl_newline"
                             :int arg1
