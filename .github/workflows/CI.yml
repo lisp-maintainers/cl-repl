@@ -43,7 +43,7 @@ jobs:
 
     - name: Rename lisp image
       run: |
-        cd ~/quicklisp/local-projects/
+        cd ~/quicklisp/local-projects/cl-repl/
         mv cl-repl ~/cl-repl.${{matrix.OS}}
 
     - name: Release
