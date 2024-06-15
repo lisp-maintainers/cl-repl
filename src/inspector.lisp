@@ -72,7 +72,8 @@
         *inspector-redisplay-banner* t))
 
 (defun inspector-select (args key)
-  (declare (ignore args key))
+  (declare (ignore args)
+           (ignorable key))
   (setf rl:*done* t)
   #+sbcl
   (let ((n (digit-char-p key)))

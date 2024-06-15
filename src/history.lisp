@@ -45,6 +45,7 @@
   (let ((old-text rl:*line-buffer*)
         (new-text (nth (+ *input-relative-index* count -1)
                        *history*)))
+    (declare (ignore old-text))
     (when new-text
       (incf *input-relative-index* count)
       (setf rl:*point* (length (highlight-text rl:+prompt+)))
@@ -59,6 +60,7 @@
          (let ((old-text rl:*line-buffer*)
                (new-text (nth (- *input-relative-index* count 1)
                               *history*)))
+           (declare (ignore old-text))
            (when (and new-text
                       (not (zerop *input-relative-index*)))
              (setf rl:*point* 0)

@@ -1,5 +1,6 @@
 (in-package :cl-repl)
 
+(defvar *debugger-level* 0)
 (defvar *current-condition*)
 (defvar *invokable-restarts*)
 (defvar *selected-restart*)
@@ -156,7 +157,7 @@
 
 (defun step-out (args key)
   (declare (ignore args key))
-  #+scbl
+  #+sbcl
   (set-restart 'sb-ext:step-out))
 
 (defun step-next (args key)

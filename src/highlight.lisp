@@ -1,5 +1,7 @@
 (in-package :cl-repl)
 
+(defvar *exiting-p* nil "EXIT-WITH-PROMPT binds this to non-NIL while CL-REPL is exiting.")
+
 (defun escape-name (name)
   (ppcre:regex-replace-all
     "\\+"
@@ -13,6 +15,8 @@
           "((?<=\\s)|^|(?<=\\()|(?<=\\)))(~{~a|~})(?=(\\s|\\(|\\)|$))"
           (sort lst #'string>)))
 
+(defvar *syntax-table*)
+
 (destructuring-bind (functions specials)
   (loop :for sym :being :the :external-symbols :of :cl
         :when (handler-case (symbol-function sym) (error () nil))
@@ -20,7 +24,7 @@
         :when (special-operator-p sym)
               :collect (escape-name (string-downcase sym)) :into specials
         :finally (return (list functions specials)))
-  (defvar *syntax-table*
+  (setf *syntax-table*
     (list
      :magic (list *magic-syntax-color* "^%\\S+")
      :string (list *string-syntax-color* "\".*?\"")
@@ -106,8 +110,7 @@
 (defun redisplay-with-highlight ()
   ;; This function is called when the cursor is moved, or any text is updated.
   (rl:redisplay)
-  (let* ((original-point rl:*point*)
-         (lines rl:*line-buffer*)
+  (let* ((lines rl:*line-buffer*)
          (hl-lines (highlight-text lines)))
 
     (when (or *exiting-p* (zerop (length lines)))

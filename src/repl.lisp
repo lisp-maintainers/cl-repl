@@ -1,8 +1,5 @@
 (in-package :cl-repl)
 
-(defvar *debugger-level* 0)
-(defvar *exiting-p* nil)
-
 (defun exit-with-prompt ()
   (finish-output)
   (when (zerop *debugger-level*)
