@@ -1,8 +1,11 @@
-(defsystem cl-repl
+(asdf:defsystem cl-repl
   :version "0.7.0"
   :author "TANI Kojiro"
   :maintainer "Lisp Maintainers (https://github.com/lisp-maintainers/cl-repl)"
   :license "GPLv3"
+  :build-operation "program-op"
+  :build-pathname "cl-repl"
+  :entry-point "cl-repl:main"
   :depends-on (#:uiop
                #:unix-opts
                #:cl-ppcre
