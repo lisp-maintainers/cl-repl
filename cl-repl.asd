@@ -26,6 +26,7 @@
                                            (:file "input")
                                            (:file "history")
                                            (:file "repl")
+                                           (:file "keymaps")
                                            (:file "bind")
                                            (:file "main"))))
   :description "A full-featured repl implementation."

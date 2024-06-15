@@ -83,22 +83,6 @@
             (format t (color *condition-color* "That slot is unbound.~%"))
             (inspect-one value))))))
 
-(define-keymap "inspector" ()
-  (#\q #'inspector-quit)
-  (#\e #'inspector-quit)
-  (#\u #'inspector-move-to-previous)
-  (#\0 #'inspector-select)
-  (#\1 #'inspector-select)
-  (#\2 #'inspector-select)
-  (#\3 #'inspector-select)
-  (#\4 #'inspector-select)
-  (#\5 #'inspector-select)
-  (#\6 #'inspector-select)
-  (#\7 #'inspector-select)
-  (#\8 #'inspector-select)
-  (#\9 #'inspector-select)
-  (#\RETURN #'unbind-key))
-
 (defun install-inspector ()
   #+sbcl
   (setf sb-impl::*inspect-fun* #'inspector))

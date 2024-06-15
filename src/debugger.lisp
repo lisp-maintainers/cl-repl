@@ -168,11 +168,3 @@
   (declare (ignore args key))
   #+sbcl
   (set-restart 'sb-ext:step-into))
-
-(define-keymap "debugger" ()
-  ("\\C-r" #'select-restart-by-number)
-  ("\\C-o" #'step-out)
-  ("\\C-x" #'step-next)
-  ("\\C-s" #'step-into)
-  ("\\C-t" #'show-backtrace))
-

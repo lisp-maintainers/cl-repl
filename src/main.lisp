@@ -78,6 +78,8 @@ Github: https://github.com/lisp-maintainers/cl-repl")
    :long "disable-debugger"))
 
 (defun main-prep ()
+  (make-keymaps)
+  (set-keymap "default")
   (bind-multiline-keys)
   (enable-syntax)
   (rl:register-function :complete #'completer)
