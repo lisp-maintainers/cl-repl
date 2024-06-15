@@ -61,14 +61,30 @@ otherwise insert the newline."
         (setf rl:*point* (+ next-newline-pos column 1))
         (setf rl:*point* len))))
 
+(defun previous-line-or-input (count key)
+  "Move cursor to the previous line.
+If it is already at the 0th line, move to the previous input."
+  (with-cursor-information (line col)
+    (if (zerop line)
+        (previous-input count key)
+        (previous-line count key))))
+
+(defun next-line-or-input (count key)
+  "Move cursor to the next line.
+If it is already at the last line, move to the next input."
+  (with-cursor-information (line col)
+    (if (= line (count #\newline rl:*line-buffer*))
+        (next-input count key)
+        (next-line count key))))
+
 (defun bind-multiline-keys ()
   (rl:bind-key #\return  #'may-be-insert-newline)
   (rl:bind-key #\newline #'may-be-insert-newline)
 
-  (rl:bind-keyseq (format nil "~c[A" #\esc) #'previous-line) ; Up
-  (rl:bind-keyseq (format nil "~c[B" #\esc) #'next-line)     ; Down
-  (rl:bind-keyseq (format nil "~c" #\dle) #'previous-line)   ; C-p
-  (rl:bind-keyseq (format nil "~c" #\so)  #'next-line)       ; C-n
+  (rl:bind-keyseq (format nil "~c[A" #\esc) #'previous-line-or-input) ; Up
+  (rl:bind-keyseq (format nil "~c[B" #\esc) #'next-line-or-input)     ; Down
+  (rl:bind-keyseq (format nil "~c" #\dle) #'previous-line-or-input)   ; C-p
+  (rl:bind-keyseq (format nil "~c" #\so)  #'next-line-or-input)       ; C-n
 
   (rl:bind-keyseq (format nil "~c[1;5A" #\esc) #'previous-input) ; Ctrl+Up
   (rl:bind-keyseq (format nil "~c[1;5B" #\esc) #'next-input)     ; Ctrl+Down
