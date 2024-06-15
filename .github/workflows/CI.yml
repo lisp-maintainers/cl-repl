@@ -32,16 +32,6 @@ jobs:
         wget https://beta.quicklisp.org/quicklisp.lisp
         sbcl --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --quit
 
-    - name: Download and install buildapp
-      run: |
-        cd $HOME/quicklisp/local-projects/
-        wget --no-check-certificate https://www.xach.com/lisp/buildapp.tgz
-        tar -zxvf buildapp.tgz
-        cd buildapp-*
-        make
-        mkdir -p $HOME/bin
-        cp ./buildapp $HOME/bin/
-
     - name: Place cl-repl in quicklisp/local-projects
       run: |
         mkdir $HOME/quicklisp/local-projects/cl-repl
@@ -49,7 +39,12 @@ jobs:
 
     - name: Dump lisp image
       run: |
-        buildapp --load ~/quicklisp/setup.lisp --eval '(ql:quickload "cl-repl")' --entry 'CL-REPL:MAIN' --output cl-repl.${{matrix.OS}} --compress-core
+        sbcl --eval '(ql:quickload "cl-repl")' --eval '(asdf:make "cl-repl")'
+
+    - name: Rename lisp image
+      run: |
+        cd ~/quicklisp/local-projects/
+        mv cl-repl ~/cl-repl.${{matrix.OS}}
 
     - name: Release
       uses: softprops/action-gh-release@v1
