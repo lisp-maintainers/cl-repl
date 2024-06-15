@@ -31,3 +31,9 @@
                                            (:file "main"))))
   :description "A full-featured repl implementation."
   :long-description "A full-featured repl implementation.")
+
+#+sb-core-compression
+(defmethod asdf:perform ((o asdf:image-op) (c asdf:system))
+  (uiop:dump-image (asdf:output-file o c)
+                   :executable t
+                   :compression t))
