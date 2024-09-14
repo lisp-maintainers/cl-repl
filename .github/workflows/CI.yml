@@ -1,9 +1,4 @@
-on:
-  push:
-    tags:
-      - 'v*'
-    branches:
-      - '**'
+on: [push, pull_request]
 
 jobs:
 
