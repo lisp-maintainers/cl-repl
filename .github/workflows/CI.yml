@@ -19,9 +19,12 @@ jobs:
         - ubuntu-20.04
     runs-on: ${{ matrix.OS }}
 
+    # NOTE: PWD = GITHUB_WORKSPACE = /home/runner/work/cl-repl/cl-repl = ~/work/cl-repl/cl-repl
+    #       HOME = /home/runner
+
     steps:
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Initial directory
       run: |
@@ -50,8 +53,8 @@ jobs:
 
     - name: Place cl-repl in quicklisp/local-projects
       run: |
-        mkdir $HOME/quicklisp/local-projects/cl-repl
-        cp -R /home/runner/work/cl-repl/cl-repl/* $HOME/quicklisp/local-projects/cl-repl
+        mkdir -p $HOME/quicklisp/local-projects/cl-repl
+        cp -R ~/work/cl-repl/cl-repl/ $HOME/quicklisp/local-projects/
 
     - name: Dump lisp image
       run: |
@@ -59,18 +62,16 @@ jobs:
 
     - name: Rename lisp image
       run: |
-        cd ~/quicklisp/local-projects/cl-repl/
-        mv cl-repl ~/work/cl-repl/cl-repl/cl-repl.${{matrix.OS}}
-        cd ~/
+        mv ~/quicklisp/local-projects/cl-repl/cl-repl ~/cl-repl.${{matrix.OS}}
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
         name: cl-repl.${{ matrix.OS }}
-        path: cl-repl/cl-repl/cl-repl.${{ matrix.OS }}
+        path: ~/cl-repl.${{ matrix.OS }}
 
     - name: Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/v')
       with:
-        files: cl-repl.${{ matrix.OS }}
+        files: ~/cl-repl.${{ matrix.OS }}
