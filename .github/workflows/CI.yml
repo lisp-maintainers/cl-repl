@@ -13,6 +13,7 @@ jobs:
     strategy:
       matrix:
         OS:
+        - macos-13  # Intel
         - macos-14  # M1
         - ubuntu-24.04
         - ubuntu-22.04
