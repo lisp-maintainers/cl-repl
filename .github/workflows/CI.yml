@@ -35,7 +35,12 @@ jobs:
     - name: Check $PATH
       run: echo $PATH
 
-    - name: Install SBCL
+    - name: Install SBCL (macOS)
+      if: startsWith(matrix.OS, 'macos')
+      run: brew install sbcl
+
+    - name: Install SBCL (Ubuntu)
+      if: startsWith(matrix.OS, 'ubuntu')
       run: sudo apt install sbcl
 
     - name: Install quicklisp
@@ -55,11 +60,14 @@ jobs:
     - name: Rename lisp image
       run: |
         cd ~/quicklisp/local-projects/cl-repl/
-        pwd
-        ls
         mv cl-repl ~/work/cl-repl/cl-repl/cl-repl.${{matrix.OS}}
         cd ~/
-        ls
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: cl-repl.${{ matrix.OS }}
+        path: cl-repl/cl-repl/cl-repl.${{ matrix.OS }}
 
     - name: Release
       uses: softprops/action-gh-release@v1
