@@ -1,16 +1,22 @@
 on:
   push:
-    tag:
+    tags:
       - 'v*'
+    branches:
+      - '**'
 
 jobs:
 
-  test:
+  build:
     name: ${{ matrix.OS }}
 
     strategy:
       matrix:
-        OS: [ ubuntu-24.04, ubuntu-22.04, ubuntu-20.04 ]
+        OS:
+        - macos-14  # M1
+        - ubuntu-24.04
+        - ubuntu-22.04
+        - ubuntu-20.04
     runs-on: ${{ matrix.OS }}
 
     steps:
@@ -59,4 +65,4 @@ jobs:
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/v')
       with:
-        files: cl-repl.${{matrix.OS}}
+        files: cl-repl.${{ matrix.OS }}
