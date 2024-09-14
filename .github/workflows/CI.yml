@@ -37,6 +37,7 @@ jobs:
     - name: Install quicklisp
       run: |
         wget https://beta.quicklisp.org/quicklisp.lisp
+        echo -ne '\n' | \
         sbcl --load quicklisp.lisp \
              --eval '(quicklisp-quickstart:install)' \
              --eval '(ql:add-to-init-file)' \
