@@ -26,18 +26,6 @@ jobs:
 
     - uses: actions/checkout@v4
 
-    - name: Initial directory
-      run: |
-        pwd
-        ls
-
-    - name: Update $PATH
-      run: |
-        echo $PATH
-        echo "PATH=$HOME/bin:$PATH" >> $GITHUB_ENV
-    - name: Check $PATH
-      run: echo $PATH
-
     - name: Install SBCL (macOS)
       if: startsWith(matrix.OS, 'macos')
       run: brew install sbcl
@@ -49,20 +37,21 @@ jobs:
     - name: Install quicklisp
       run: |
         wget https://beta.quicklisp.org/quicklisp.lisp
-        sbcl --load quicklisp.lisp --eval '(quicklisp-quickstart:install)' --quit
-
-    - name: Place cl-repl in quicklisp/local-projects
-      run: |
-        mkdir -p $HOME/quicklisp/local-projects/cl-repl
-        cp -R ~/work/cl-repl/cl-repl/ $HOME/quicklisp/local-projects/
+        sbcl --load quicklisp.lisp \
+             --eval '(quicklisp-quickstart:install)' \
+             --eval '(ql:add-to-init-file)' \
+             --quit
 
     - name: Dump lisp image
       run: |
-        sbcl --load ~/quicklisp/setup.lisp --eval '(ql:quickload "cl-repl")' --eval '(asdf:make "cl-repl")'
+        sbcl --load cl-repl.asd \
+             --eval '(ql:quickload :cl-repl)' \
+             --eval '(asdf:make :cl-repl)' \
+             --quit
 
     - name: Rename lisp image
       run: |
-        mv ~/quicklisp/local-projects/cl-repl/cl-repl ~/cl-repl.${{matrix.OS}}
+        mv cl-repl ~/cl-repl.${{matrix.OS}}
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4

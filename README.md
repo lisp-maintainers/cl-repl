@@ -152,7 +152,7 @@ Any suggestions are always welcomed.
 ### List of Tasks
 
 - [ ] (Complexity: high) Support for menu based completion: can we have an ipython-like dropdown menu based completion?
-- [ ] (Complexity: moderate) MacOS Binaries through Github Actions
+- [x] (Complexity: moderate) MacOS Binaries through Github Actions
 - [ ] (Complexity: moderate) Linux Arm64 binaries through Travis or something else
 - [ ] (Complexity: moderate) Windows Binaries
 - [ ] (Complexity: moderate) Automating tests
