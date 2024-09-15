@@ -50,15 +50,8 @@ jobs:
       run: |
         mv cl-repl ~/cl-repl.${{matrix.OS}}
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: cl-repl.${{ matrix.OS }}
-        path: ~/cl-repl.${{ matrix.OS }}
-        compression-level: 0
-
     - name: Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       if: startsWith(github.ref, 'refs/tags/v')
       with:
         files: cl-repl.${{ matrix.OS }}
