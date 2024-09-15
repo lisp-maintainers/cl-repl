@@ -48,7 +48,8 @@ jobs:
 
     - name: Rename lisp image
       run: |
-        mv cl-repl ~/cl-repl.${{matrix.OS}}
+        # This seems essential for the 'Release' action below
+        mv cl-repl ~/work/cl-repl/cl-repl/cl-repl.${{matrix.OS}}
 
     - name: Release
       uses: softprops/action-gh-release@v2
