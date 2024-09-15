@@ -153,6 +153,77 @@ Any suggestions are always welcomed.
 ## Contributors
 
 <!-- readme: contributors -start -->
+<table>
+	<tbody>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/koji-kojiro">
+                    <img src="https://avatars.githubusercontent.com/u/23150714?v=4" width="100;" alt="koji-kojiro"/>
+                    <br />
+                    <sub><b>TANI Kojiro</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/digikar99">
+                    <img src="https://avatars.githubusercontent.com/u/31390273?v=4" width="100;" alt="digikar99"/>
+                    <br />
+                    <sub><b>Shubhamkar Ayare</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/xiaoyu2006">
+                    <img src="https://avatars.githubusercontent.com/u/32544798?v=4" width="100;" alt="xiaoyu2006"/>
+                    <br />
+                    <sub><b>Yi Cao</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/fukamachi">
+                    <img src="https://avatars.githubusercontent.com/u/90570?v=4" width="100;" alt="fukamachi"/>
+                    <br />
+                    <sub><b>Eitaro Fukamachi</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/vindarel">
+                    <img src="https://avatars.githubusercontent.com/u/3721004?v=4" width="100;" alt="vindarel"/>
+                    <br />
+                    <sub><b>vindarel</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/celaleddin">
+                    <img src="https://avatars.githubusercontent.com/u/7376042?v=4" width="100;" alt="celaleddin"/>
+                    <br />
+                    <sub><b>Celaleddin Hidayetoğlu</b></sub>
+                </a>
+            </td>
+		</tr>
+		<tr>
+            <td align="center">
+                <a href="https://github.com/ryukinix">
+                    <img src="https://avatars.githubusercontent.com/u/7642878?v=4" width="100;" alt="ryukinix"/>
+                    <br />
+                    <sub><b>Manoel V. Machado</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/Release-Candidate">
+                    <img src="https://avatars.githubusercontent.com/u/25861412?v=4" width="100;" alt="Release-Candidate"/>
+                    <br />
+                    <sub><b>Release-Candidate</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/egao1980">
+                    <img src="https://avatars.githubusercontent.com/u/919195?v=4" width="100;" alt="egao1980"/>
+                    <br />
+                    <sub><b>Nikolai Matiushev</b></sub>
+                </a>
+            </td>
+		</tr>
+	<tbody>
+</table>
 <!-- readme: contributors -end -->
 
 ### List of Tasks
