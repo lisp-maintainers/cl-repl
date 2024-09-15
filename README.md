@@ -146,8 +146,14 @@ We've be sure the following editors work properly.
 - Lem
 
 # Contributing
+
 Don't hesitate to open issues or to send PRs.
 Any suggestions are always welcomed.
+
+## Contributors
+
+<!-- readme: contributors -start -->
+<!-- readme: contributors -end -->
 
 ### List of Tasks
 
@@ -163,6 +169,7 @@ Any suggestions are always welcomed.
 
 # Maintainer(s)
 [Lisp Maintainers](https://github.com/lisp-maintainers)
+
 
 # License
 CL-REPL is distributed under [GPLv3](./LICENSE).
