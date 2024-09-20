@@ -26,9 +26,13 @@ jobs:
       if: startsWith(matrix.OS, 'macos')
       run: brew install sbcl
 
-    - name: Install SBCL (Ubuntu)
+    - name: Install Roswell and SBCL (Ubuntu)
       if: startsWith(matrix.OS, 'ubuntu')
-      run: sudo apt install sbcl
+      env:
+        LISP: ${{ matrix.lisp }}
+      run: |
+        curl -L https://raw.githubusercontent.com/roswell/roswell/master/scripts/install-for-ci.sh | sh
+        ros install sbcl
 
     - name: Install quicklisp
       run: |
