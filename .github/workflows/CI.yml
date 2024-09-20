@@ -33,7 +33,7 @@ jobs:
         LISP: ${{ matrix.lisp }}
       run: |
         curl -L https://raw.githubusercontent.com/roswell/roswell/master/scripts/install-for-ci.sh | sh
-        ros install sbcl
+        ros install sbcl-bin
 
     - name: Install quicklisp
       run: |
