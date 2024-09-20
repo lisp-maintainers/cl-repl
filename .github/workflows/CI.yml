@@ -62,6 +62,13 @@ jobs:
     - name: Rename lisp image
       run: mv cl-repl ${{ env.CL_REPL_BIN }}
 
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.CL_REPL_BIN }}
+        path: ${{ env.CL_REPL_BIN }}
+        compression-level: 0
+
     - name: Release
       uses: softprops/action-gh-release@v2
       if: startsWith(github.ref, 'refs/tags/v')
