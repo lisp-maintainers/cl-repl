@@ -22,16 +22,25 @@ jobs:
 
     - uses: actions/checkout@v4
 
-    - name: Install SBCL (macOS)
-      if: startsWith(matrix.OS, 'macos')
-      run: brew install sbcl
-
-    - name: Install SBCL (Ubuntu)
+    - name: Install Roswell and SBCL (Ubuntu)
       if: startsWith(matrix.OS, 'ubuntu')
-      run: sudo apt install sbcl
-
-    - name: Install quicklisp
       run: |
+        curl -L https://raw.githubusercontent.com/roswell/roswell/master/scripts/install-for-ci.sh | sh
+        ros install sbcl-bin
+
+    - name: Dump lisp image (Ubuntu)
+      if: startsWith(matrix.OS, 'ubuntu')
+      run: |
+        ros run -- \
+             --load cl-repl.asd \
+             --eval '(ql:quickload :cl-repl)' \
+             --eval '(asdf:make :cl-repl)' \
+             --quit
+
+    - name: Install SBCL and quicklisp (macOS)
+      if: startsWith(matrix.OS, 'macos')
+      run: |
+        brew install sbcl
         wget https://beta.quicklisp.org/quicklisp.lisp
         echo -ne '\n' | \
         sbcl --load quicklisp.lisp \
@@ -39,7 +48,8 @@ jobs:
              --eval '(ql:add-to-init-file)' \
              --quit
 
-    - name: Dump lisp image
+    - name: Dump lisp image (macOS)
+      if: startsWith(matrix.OS, 'macos')
       run: |
         sbcl --load cl-repl.asd \
              --eval '(ql:quickload :cl-repl)' \
