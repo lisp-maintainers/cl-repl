@@ -47,7 +47,7 @@ jobs:
              --quit
 
     - name: Set release name
-      run: echo "CL_REPL_BIN=cl-repl.${{ matrix.OS }}.$(arch)" >> $GITHUB_ENV
+      run: echo "CL_REPL_BIN=cl-repl.${{ matrix.OS }}.$(arch).bin" >> $GITHUB_ENV
 
     - name: Rename lisp image
       run: mv cl-repl ${{ env.CL_REPL_BIN }}
