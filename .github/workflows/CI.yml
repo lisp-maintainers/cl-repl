@@ -1,5 +1,5 @@
 on: [push, pull_request]
-  
+
 jobs:
 
   build:
@@ -46,11 +46,14 @@ jobs:
              --eval '(asdf:make :cl-repl)' \
              --quit
 
+    - name: Set release name
+      run: echo "CL_REPL_BIN=cl-repl.${{ matrix.OS }}.$(arch)" >> $GITHUB_ENV
+
     - name: Rename lisp image
-      run: mv cl-repl cl-repl.${{ matrix.OS }}.${{ runner.arch }}
+      run: mv cl-repl ${{ env.CL_REPL_BIN }}
 
     - name: Release
       uses: softprops/action-gh-release@v2
       if: startsWith(github.ref, 'refs/tags/v')
       with:
-        files: cl-repl.${{ matrix.OS }}.${{ runner.arch }}
+        files: ${{ env.CL_REPL_BIN }}
