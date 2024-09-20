@@ -13,6 +13,7 @@ jobs:
         - ubuntu-24.04
         - ubuntu-22.04
         - ubuntu-20.04
+      fail-fast: false
     runs-on: ${{ matrix.OS }}
 
     # NOTE: PWD = GITHUB_WORKSPACE = /home/runner/work/cl-repl/cl-repl = ~/work/cl-repl/cl-repl
