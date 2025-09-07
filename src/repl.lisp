@@ -38,12 +38,15 @@
      (*exit () :report "Exit CL-REPL." (throw 0 nil))
      ,@restarts))
 
+(defvar *read-function* #'read-from-string
+  "Function that will be used to convert the input string to a lisp expression.")
+
 (defun read-eval-print (&key (level 0))
   (let ((*debugger-level* level))
     (with-extra-restarts
-      (eval-print (setq - (read-from-string (read-input))))
+        (eval-print (setq - (funcall *read-function* (read-input))))
       (*retry () :report "Try evaluating again."
-        (with-extra-restarts (eval-print -))))))
+              (with-extra-restarts (eval-print -))))))
 
 (defun repl ()
   (loop :when (string/= *keymap* "default")
