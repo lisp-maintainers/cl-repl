@@ -171,8 +171,8 @@ Any suggestions are always welcomed.
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/xiaoyu2006">
-                    <img src="https://avatars.githubusercontent.com/u/32544798?v=4" width="100;" alt="xiaoyu2006"/>
+                <a href="https://github.com/yikerman">
+                    <img src="https://avatars.githubusercontent.com/u/32544798?v=4" width="100;" alt="yikerman"/>
                     <br />
                     <sub><b>Yi Cao</b></sub>
                 </a>
