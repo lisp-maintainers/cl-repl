@@ -32,10 +32,13 @@
               (format nil "~V@{.~} " (1- (length prompt-string)) :dummy)))
     (color color prompt-string)))
 
-(defun line-continue-p (string)
+(defun lisp-line-continue-p (string)
   (let ((*read-eval* nil))
     (handler-case (progn (read-from-string string) nil)
       (end-of-file () t))))
+
+(defvar *line-continue-function* #'lisp-line-continue-p)
+(defun line-continue-p (string) (funcall *line-continue-function* string))
 
 (defun check-input (input)
   (when (input-magic-p input)

@@ -17,6 +17,7 @@
            *debugger-prompt-function*
            *output-indicator-function*
            *debugger-level*
+           *line-continue-function*
            *read-function*
            *repl-flush-screen*
            *debugger-flush-screen*
