@@ -6,6 +6,7 @@
   "Maximum number of history entries.")
 (defvar *input-relative-index* 0
   "Which previous entry is the current input.")
+(defvar *edit-buffer* nil)
 
 (defun add-history (string)
   (when string
@@ -45,8 +46,10 @@
   (let ((old-text rl:*line-buffer*)
         (new-text (nth (+ *input-relative-index* count -1)
                        *history*)))
-    (declare (ignore old-text))
     (when new-text
+      (when (and (< 0 (length old-text))
+                 (zerop *input-relative-index*))
+        (setf *edit-buffer* old-text))
       (incf *input-relative-index* count)
       (setf rl:*point* (length (highlight-text rl:+prompt+)))
       (rl:replace-line new-text 0)
@@ -68,5 +71,5 @@
              (rl:redisplay))))
         (t
          (setf *input-relative-index* 0)
-         (rl:replace-line "" 0)))
+         (rl:replace-line (or *edit-buffer* "") 0)))
   0)
