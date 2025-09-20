@@ -50,7 +50,6 @@
       (incf *input-relative-index* count)
       (setf rl:*point* (length (highlight-text rl:+prompt+)))
       (rl:replace-line new-text 0)
-      (setf rl:*point* 0)
       (rl:redisplay)))
   0)
 
