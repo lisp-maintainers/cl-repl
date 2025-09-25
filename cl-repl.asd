@@ -28,12 +28,16 @@
                                            (:file "repl")
                                            (:file "keymaps")
                                            (:file "bind")
+                                           (:file "contribs")
                                            (:file "main"))))
   :description "A full-featured repl implementation."
   :long-description "A full-featured repl implementation.")
 
 #+sb-core-compression
 (defmethod asdf:perform ((o asdf:image-op) (c asdf:system))
+  (eval (print
+         `(push :sb-aclrepl ,(find-symbol "*CONTRIB-BLACKLIST*" :cl-repl))))
+  (uiop:symbol-call :cl-repl '#:require-all-contribs)
   (uiop:dump-image (asdf:output-file o c)
                    :executable t
                    :compression t))
