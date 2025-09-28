@@ -1,0 +1,65 @@
+on: [push, pull_request]
+
+jobs:
+
+  build:
+
+    name: ${{ matrix.OS }}
+
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        lisp: [sbcl]
+        OS: [windows]
+
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: msys2/setup-msys2@v2
+      with:
+        install: libzstd-devel git curl mingw-w64-x86_64-readline
+
+
+    - name: Check $PATH
+      run: echo $PATH
+
+    - name: Download implementation
+      env:
+        LISP: ${{ matrix.lisp }}
+        OS:   ${{ matrix.OS }}
+      run: |
+        pwd
+        ls -l
+        bash --version
+        bash <(curl -s https://raw.githubusercontent.com/digikar99/lisp-travis-lite/master/run.sh)
+
+    - name: Dump lisp image (windows)
+      run: |
+        sbcl --load cl-repl.asd \
+             --eval '(ql:quickload :cl-repl)' \
+             --eval '(asdf:make :cl-repl)' \
+             --quit
+
+    - name: Set release name
+      run: echo "CL_REPL_BIN=cl-repl.${{ matrix.OS }}.$(uname -m).exe" >> $GITHUB_ENV
+
+    - name: Rename lisp image
+      run: mv cl-repl.exe ${{ env.CL_REPL_BIN }}
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ env.CL_REPL_BIN }}
+        path: ${{ env.CL_REPL_BIN }}
+        compression-level: 0
+
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/v')
+      with:
+        files: ${{ env.CL_REPL_BIN }}
