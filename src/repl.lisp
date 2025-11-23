@@ -18,7 +18,8 @@
 
 (defun print-result (values)
   (reset-input)
-  (format t "~&~a~{~s~^~%~}~%"
+  (format t "~c[2A~&~a~{~s~^~%~}~%~%"
+          #\esc ; 2 line up
           (color *output-indicator-color*
                  (funcall *output-indicator-function*)
                  :prompt-chars nil)
