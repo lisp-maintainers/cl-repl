@@ -18,13 +18,14 @@
 
 (defun print-result (values)
   (reset-input)
-  (format t "~c[2A~&~a~{~s~^~%~}~%~%"
-          #\esc ; 2 line up
-          (color *output-indicator-color*
-                 (funcall *output-indicator-function*)
-                 :prompt-chars nil)
-          values)
-  (finish-output) t) 
+  (let ((output (format nil "~{~s~^~%~}~%~%" values)))
+    (format t "~c[2A~&~a~a"
+            #\esc ; 2 line up
+            (color *output-indicator-color*
+                   (funcall *output-indicator-function*)
+                   :prompt-chars nil)
+            output))
+  (finish-output) t)
 
 (defun eval-print (-)
   (format t "~&")

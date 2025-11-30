@@ -48,11 +48,9 @@
   (set-keymap "inspector")
   (setf *inspector-state* nil
         *inspector-redisplay-banner* nil)
-  (format t "~c[?25l" #\escape)
-  (catch 'inspector-quit
-    (unwind-protect
-      (inspect-one object)
-      (format t "~c[?25h" #\escape)))
+  (with-cursor-hidden
+    (catch 'inspector-quit
+      (inspect-one object)))
   (when *inspector-flush-screen*
     (flush-screen)
     (if (zerop *debugger-level*)
