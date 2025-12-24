@@ -5,7 +5,6 @@
 
 # **Warning; WIP**
 The software is still alpha quality.
-The functionalities are incomplete and may cause unkown bugs.
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
@@ -236,7 +235,7 @@ Any suggestions are always welcomed.
 - [ ] (Complexity: moderate) Add support for logs
 
 # Author
-[TANI Kojiro](https://github.com/koji-kojiro) (kojiro0531@gmail.com)
+[TANI Kojiro](https://github.com/koji-kojiro) (kojiro0531@gmail.com) · lisp-maintainers contributors
 
 # Maintainer(s)
 [Lisp Maintainers](https://github.com/lisp-maintainers)
@@ -244,3 +243,7 @@ Any suggestions are always welcomed.
 
 # License
 CL-REPL is distributed under [GPLv3](./LICENSE).
+
+# See also
+
+- [ICL](https://github.com/atgreen/icl)
