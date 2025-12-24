@@ -177,17 +177,17 @@ Any suggestions are always welcomed.
                 </a>
             </td>
             <td align="center">
-                <a href="https://github.com/fukamachi">
-                    <img src="https://avatars.githubusercontent.com/u/90570?v=4" width="100;" alt="fukamachi"/>
-                    <br />
-                    <sub><b>Eitaro Fukamachi</b></sub>
-                </a>
-            </td>
-            <td align="center">
                 <a href="https://github.com/vindarel">
                     <img src="https://avatars.githubusercontent.com/u/3721004?v=4" width="100;" alt="vindarel"/>
                     <br />
                     <sub><b>vindarel</b></sub>
+                </a>
+            </td>
+            <td align="center">
+                <a href="https://github.com/fukamachi">
+                    <img src="https://avatars.githubusercontent.com/u/90570?v=4" width="100;" alt="fukamachi"/>
+                    <br />
+                    <sub><b>Eitaro Fukamachi</b></sub>
                 </a>
             </td>
             <td align="center">
