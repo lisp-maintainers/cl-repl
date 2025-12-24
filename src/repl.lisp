@@ -31,10 +31,16 @@
   (format t "~&")
   (finish-output)
   (let ((values (multiple-value-list (eval -))))
-    (setq +++ ++ /// // *** (car ///)
-          ++ + // / ** (car //)
-          + - / values * (car /))
-    (print-result values)))
+    (setq +++ ++
+          /// //
+          *** (car ///)
+          ++ +
+          // /
+          ** (car //)
+          + -
+          / values
+          * (car /))
+  (print-result values)))
 
 (defmacro with-extra-restarts (form &rest restarts)
   `(restart-case ,form
