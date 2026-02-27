@@ -9,7 +9,8 @@
 (defvar *edit-buffer* nil)
 
 (defun add-history (string)
-  (when string
+  (when (and string
+             (not (member string *history* :test #'string=)))
     (setf *history* (cons string *history*))))
 
 (defun load-history ()
@@ -28,7 +29,8 @@
   (let* ((history *history*)
          (all-history (reverse
                        (alexandria-2:subseq* history 0 *max-history-length*)))
-         (all-history (remove-if #'null all-history)))
+         (all-history (remove-duplicates (remove-if #'null all-history)
+                                         :test #'string=)))
     (with-open-file (f *history-filename*
                        :direction :output
                        :if-does-not-exist :create
