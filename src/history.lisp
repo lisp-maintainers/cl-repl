@@ -51,8 +51,9 @@
                  (zerop *input-relative-index*))
         (setf *edit-buffer* old-text))
       (incf *input-relative-index* count)
-      (setf rl:*point* (length (highlight-text rl:+prompt+)))
+      (setf rl:*point* 0)
       (rl:replace-line new-text 0)
+      (setf rl:*point* (length rl:*line-buffer*))
       (rl:redisplay)))
   0)
 
@@ -68,6 +69,7 @@
              (setf rl:*point* 0)
              (decf *input-relative-index* count)
              (rl:replace-line new-text 0)
+             (setf rl:*point* (length rl:*line-buffer*))
              (rl:redisplay))))
         (t
          (setf *input-relative-index* 0)
