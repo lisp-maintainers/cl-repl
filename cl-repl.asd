@@ -1,5 +1,5 @@
 (asdf:defsystem cl-repl
-  :version "0.7.4"
+  :version "0.7.5"
   :author "TANI Kojiro"
   :maintainer "Lisp Maintainers (https://github.com/lisp-maintainers/cl-repl)"
   :license "GPLv3"
