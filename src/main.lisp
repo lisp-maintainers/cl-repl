@@ -130,7 +130,8 @@ Github: https://github.com/lisp-maintainers/cl-repl")
     (unwind-protect
          (let ((*debugger-hook* (if *debugger-enabled-p*
                                     #'debugger
-                                    #'display-error-without-debugging)))
+                                    #'display-error-without-debugging))
+               (*print-case* :downcase))
            (repl))
       (save-history)
       (rl:deprep-terminal))
