@@ -9,8 +9,8 @@
 (defvar *edit-buffer* nil)
 
 (defun add-history (string)
-  (when (and string
-             (not (member string *history* :test #'string=)))
+  (when string
+    (setf *history* (remove string *history* :test #'string=))
     (setf *history* (cons string *history*))))
 
 (defun load-history ()
