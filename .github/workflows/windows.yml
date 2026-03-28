@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        lisp: [sbcl]
+        lisp: [sbcl_static]
         OS: [windows]
 
     defaults:
@@ -22,7 +22,7 @@ jobs:
 
     - uses: msys2/setup-msys2@v2
       with:
-        install: libzstd-devel git curl mingw-w64-x86_64-readline
+        install: git curl zip mingw-w64-x86_64-readline mingw-w64-x86_64-ncurses mingw-w64-x86_64-toolchain mingw-w64-x86_64-autotools
 
 
     - name: Check $PATH
@@ -38,28 +38,46 @@ jobs:
         bash --version
         bash <(curl -s https://raw.githubusercontent.com/digikar99/lisp-travis-lite/master/run.sh)
 
+    - name: Statically link against libreadline
+      run: |
+        # Turns out we also need other libraries
+        SBCL_DIR="sbcl-2.6.2+r00-x86-64-windows"
+        cd "/home/runneradmin/$SBCL_DIR"
+        LIBREADLINE="/mingw64/lib/libreadline.a"
+        LIBNCURSES="/mingw64/lib/libncurses.a"
+        LIBWINPTHREAD="/mingw64/lib/libwinpthread.a"
+        export WHOLE_ARCHIVES="$LIBNCURSES $LIBREADLINE -Wl,--no-whole-archive $LIBWINPTHREAD"
+        make -C "src/runtime" -f binaries.mk sbcl.extras
+        mv "src/runtime/sbcl.extras" "src/runtime/sbcl"
+
+
     - name: Dump lisp image (windows)
       run: |
-        sbcl --load cl-repl.asd \
-             --eval '(ql:quickload :cl-repl)' \
-             --eval '(asdf:make :cl-repl)' \
-             --quit
+        cl --load cl-repl.asd \
+           --eval '(ql:quickload :cl-repl)' \
+           --eval "(cffi:close-foreign-library 'rl:readline)"\
+           --eval '(asdf:make :cl-repl)' \
+           --quit
 
     - name: Set release name
-      run: echo "CL_REPL_BIN=cl-repl.${{ matrix.OS }}.$(uname -m).exe" >> $GITHUB_ENV
+      run: |
+        echo "CL_REPL_DIR=cl-repl.${{ matrix.OS }}.$(uname -m)" >> $GITHUB_ENV
 
-    - name: Rename lisp image
-      run: mv cl-repl.exe ${{ env.CL_REPL_BIN }}
+    - name: Rename lisp image and copy licenses
+      run: |
+        mkdir ${{ env.CL_REPL_DIR }}
+        mv cl-repl.exe ${{ env.CL_REPL_DIR }}/${{ env.CL_REPL_DIR }}.exe
+        cp -r /home/runneradmin/sbcl-2.6.2+r00-x86-64-windows/COPYING* ${{ env.CL_REPL_DIR }}
 
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.CL_REPL_BIN }}
-        path: ${{ env.CL_REPL_BIN }}
+        name: ${{ env.CL_REPL_DIR }}
+        path: ${{ env.CL_REPL_DIR }}
         compression-level: 0
 
     - name: Release
       uses: softprops/action-gh-release@v2
       if: startsWith(github.ref, 'refs/tags/v')
       with:
-        files: ${{ env.CL_REPL_BIN }}
+        files: ${{ env.CL_REPL_DIR }}.zip
