@@ -68,8 +68,8 @@
         (previous-newline-position
           (gensym "PREVIOUS-NEWLINE-POSITION")))
     `(let* ((,prompt (prompt-string))
-            (,lines (concatenate 'string ,prompt rl:*line-buffer*))
-            (,point (+ (length ,prompt) rl:*point*))
+            (,lines (concatenate 'string ,prompt (readline-line-buffer)))
+            (,point (+ (length ,prompt) (readline-point)))
             (,line-var (count #\newline ,lines :end ,point))
             (,col-var
               (let ((,previous-newline-position
@@ -110,7 +110,7 @@
 (defun redisplay-with-highlight ()
   ;; This function is called when the cursor is moved, or any text is updated.
   (rl:redisplay)
-  (let* ((lines rl:*line-buffer*)
+  (let* ((lines (readline-line-buffer))
          (hl-lines (highlight-text lines)))
 
     (when (or *exiting-p* (zerop (length lines)))

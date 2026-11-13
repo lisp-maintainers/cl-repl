@@ -4,8 +4,8 @@
   ;; The C library readline calling convention requires these two args
   "If the previous character is a newline, then accept-line by rl_newline
 otherwise insert the newline."
-  (if (or (and (= rl:*point* (length rl:*line-buffer*))
-               (not (line-continue-p rl:*line-buffer*)))
+  (if (or (and (= (readline-point) (length (readline-line-buffer)))
+               (not (line-continue-p (readline-line-buffer))))
           *exiting-p*)
       (cffi:foreign-funcall "rl_newline"
                             :int arg1
@@ -18,8 +18,8 @@ otherwise insert the newline."
 (defun previous-line (count key)
   "Move cursor to the previous line."
   (declare (ignore count key))
-  (let* ((current-input rl:*line-buffer*)
-         (point rl:*point*)
+  (let* ((current-input (readline-line-buffer))
+         (point (readline-point))
          (current-newline-pos
            (position #\newline current-input :end point :from-end t))
          (column (when current-newline-pos
@@ -34,15 +34,15 @@ otherwise insert the newline."
     (when (and column previous-newline-pos)
       (if (< (+ previous-newline-pos column)
              current-newline-pos)
-          (setf rl:*point* (+ previous-newline-pos column))
-          (setf rl:*point* current-newline-pos)))))
+          (set-readline-point (+ previous-newline-pos column))
+          (set-readline-point current-newline-pos)))))
 
 (defun next-line (count key)
   "Move cursor to the next line."
   (declare (ignore count key))
-  (let* ((current-input rl:*line-buffer*)
+  (let* ((current-input (readline-line-buffer))
          (len (length current-input))
-         (point rl:*point*)
+         (point (readline-point))
          (current-newline-pos
            (position #\newline current-input :end point :from-end t))
          (column (if current-newline-pos
@@ -58,8 +58,8 @@ otherwise insert the newline."
 
     (if (< (+ next-newline-pos column 1)
            len)
-        (setf rl:*point* (+ next-newline-pos column 1))
-        (setf rl:*point* len))))
+        (set-readline-point (+ next-newline-pos column 1))
+        (set-readline-point len))))
 
 (defun previous-line-or-input (count key)
   "Move cursor to the previous line.
@@ -73,7 +73,7 @@ If it is already at the 0th line, move to the previous input."
   "Move cursor to the next line.
 If it is already at the last line, move to the next input."
   (with-cursor-information (line col)
-    (if (= line (count #\newline rl:*line-buffer*))
+    (if (= line (count #\newline (readline-line-buffer)))
         (next-input count key)
         (next-line count key))))
 

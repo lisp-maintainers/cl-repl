@@ -26,6 +26,7 @@
                                            (:file "input")
                                            (:file "history")
                                            (:file "repl")
+                                           (:file "readline")
                                            (:file "keymaps")
                                            (:file "bind")
                                            (:file "contribs")
